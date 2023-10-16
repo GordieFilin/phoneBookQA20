@@ -46,7 +46,7 @@ public class LoginTests extends BaseTests {
     public void negativeLoginWithoutNumbers(){
         UserDtoLombok userDtoLombok = UserDtoLombok.builder()
                 .email("testqa20@gmail.com")
-                .password("aaaaaaAa$")
+                .password("bcaaaaAa$")
                 .build();
 
         app.getUserHelper().loginUserDtoLombok(userDtoLombok);

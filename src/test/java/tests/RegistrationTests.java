@@ -37,7 +37,7 @@ public class RegistrationTests extends BaseTests{
 
         UserDtoLombok user = UserDtoLombok.builder()
                 .email(email)
-                .password("aaaaaaAa!")
+                .password("aaabaaAa!")
                 .build();
 
         app.getUserHelper().fillRegistrationForm(user);
