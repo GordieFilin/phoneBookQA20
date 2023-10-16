@@ -20,6 +20,10 @@ public class UserHelper extends BaseHelper{
     String btnRegistration = "document.querySelector('[name=\"registration\"]').click();\n";
     By textContacts = By.xpath("//a[@href='/contacts']");
 
+    By loginFailed = By.xpath("//div[@id='root']/..//div//div//div//div");
+
+    By btnSignOut = By.xpath("//button");
+
     public void fillLoginUserDto(UserDTO userDTO) {
         clickBase(btnOpenLoginForm);
         typeTextBase(inputEmail, userDTO.getEmail());
@@ -47,11 +51,29 @@ public class UserHelper extends BaseHelper{
     }
 
     public void fillRegistrationForm(UserDtoLombok user) {
-        clickBase(btnOpenLoginForm);
+        clickByXY(btnOpenLoginForm, 2 ,5);
         typeTextBase(inputEmail, user.getEmail());
         typeTextBase(inputPassword, user.getPassword());
         jsClickBase(btnRegistration);
       //  clickBase(btnReg);
 
+    }
+
+    public boolean validateLoginIncorrect() {
+       // pushEnter();
+        return isTextEqual(btnOpenLoginForm, "LOGIN");
+    }
+
+    public boolean validateRegIncorrect () {
+        // pushEnter();
+        return isTextEqual(btnOpenLoginForm, "LOGIN");
+    }
+
+    public boolean btnSignOutExist() {
+        return isElementExist(btnSignOut);
+    }
+
+    public void signOut() {
+        clickBase(btnSignOut);
     }
 }

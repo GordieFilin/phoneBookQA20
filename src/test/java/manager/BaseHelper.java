@@ -41,6 +41,10 @@ public class BaseHelper {
         el.sendKeys(text);
     }
 
+    public boolean isElementExist(By locator) {
+        return findElementsBase(locator).size() > 0;
+    }
+
     public boolean isTextEqual(By locator, String expectedResult) {
         String actualResult = getTextBase(locator);
         expectedResult = expectedResult.toUpperCase();
@@ -59,13 +63,18 @@ public class BaseHelper {
 
         public void clickByXY(By locator, double down ,int right){ // 10 12
             Rectangle rectangle = findElementBase(locator).getRect();
-            int x = rectangle.getX() + right;
-            int y = (int) (rectangle.getY() + down);
+            int x = rectangle.getX() + (rectangle.getWidth() /right);
+            int y = (int) (rectangle.getY() +  (rectangle.getHeight() /down));
 
             Actions actions = new Actions(driver);
             actions.moveByOffset(x,y).click().perform();
 
         }
+
+    public void pushEnter() {
+        Actions action = new Actions(driver);
+        action.sendKeys(Keys.RETURN).build().perform();
+    }
 
     }
 

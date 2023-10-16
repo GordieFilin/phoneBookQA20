@@ -4,6 +4,7 @@ import dto.UserDTO;
 import dto.UserDTOWith;
 import dto.UserDtoLombok;
 import org.testng.Assert;
+import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
 public class LoginTests extends BaseTests {
@@ -12,6 +13,12 @@ public class LoginTests extends BaseTests {
             .withPassword("123456Aa$");
     UserDTO userDTO = new UserDTO("testqa20@gmail.com", "123456Aa$");
 
+    @BeforeTest
+
+    public void preconditionsLogin() {
+        app.navigateToMainPage();
+        logoutIfLogin();
+    }
     @Test
     public void positiveLoginUserDto() {
         app.getUserHelper().fillLoginUserDto(userDTO);
@@ -33,6 +40,17 @@ public class LoginTests extends BaseTests {
 
         app.getUserHelper().loginUserDtoLombok(userDtoLombok);
         Assert.assertTrue(app.getUserHelper().validateContactTextDisplaysMainMenu());
+    }
+
+    @Test
+    public void negativeLoginWithoutNumbers(){
+        UserDtoLombok userDtoLombok = UserDtoLombok.builder()
+                .email("testqa20@gmail.com")
+                .password("aaaaaaAa$")
+                .build();
+
+        app.getUserHelper().loginUserDtoLombok(userDtoLombok);
+        Assert.assertTrue(app.getUserHelper().validateLoginIncorrect());
     }
 
 }
