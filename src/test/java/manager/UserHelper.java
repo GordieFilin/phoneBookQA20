@@ -3,6 +3,7 @@ package manager;
 import dto.UserDTO;
 import dto.UserDTOWith;
 import dto.UserDtoLombok;
+import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 
@@ -51,7 +52,7 @@ public class UserHelper extends BaseHelper{
     }
 
     public void fillRegistrationForm(UserDtoLombok user) {
-        clickByXY(btnOpenLoginForm, 2 ,5);
+        clickBase(btnOpenLoginForm);
         typeTextBase(inputEmail, user.getEmail());
         typeTextBase(inputPassword, user.getPassword());
         jsClickBase(btnRegistration);
@@ -59,15 +60,15 @@ public class UserHelper extends BaseHelper{
 
     }
 
-    public boolean validateLoginIncorrect() {
-       // pushEnter();
-        return isTextEqual(btnOpenLoginForm, "LOGIN");
-    }
-
-    public boolean validateRegIncorrect () {
-        // pushEnter();
-        return isTextEqual(btnOpenLoginForm, "LOGIN");
-    }
+//    public boolean validateLoginIncorrect() {
+//       // pushEnter();
+//        return isTextEqual(btnOpenLoginForm, "LOGIN");
+//    }
+//
+//    public boolean validateRegIncorrect () {
+//        // pushEnter();
+//        return isTextEqual(btnOpenLoginForm, "LOGIN");
+//    }
 
     public boolean btnSignOutExist() {
         return isElementExist(btnSignOut);
@@ -75,5 +76,28 @@ public class UserHelper extends BaseHelper{
 
     public void signOut() {
         clickBase(btnSignOut);
+    }
+
+    public boolean validateMessageAlertWrongEmailPasswordCorrect() {
+        String expectedResult = "Wrong email or password".toUpperCase();
+        String actualResult = getTextAlert();
+        return isTextEqualGet2Strings(expectedResult,actualResult);
+
+    }
+
+    public boolean validateMessageAlertWrongEmailPasswordCorrectReg() {
+        String expectedResult = "WRONG EMAIL OR PASSWORD FORMAT\n" +
+                "            EMAIL MUST CONTAINS ONE @ AND MINIMUM 2 SYMBOLS AFTER LAST DOT\n" +
+                "            PASSWORD MUST CONTAIN AT LEAST ONE UPPERCASE LETTER!\n" +
+                "            PASSWORD MUST CONTAIN AT LEAST ONE LOWERCASE LETTER!\n" +
+                "            PASSWORD MUST CONTAIN AT LEAST ONE DIGIT!\n" +
+                "            PASSWORD MUST CONTAIN AT LEAST ONE SPECIAL SYMBOL FROM [‘$’,’~’,’-‘,’_’]!";
+        String actualResult = getTextAlert();
+        return isTextEqualGet2Strings(expectedResult, actualResult);
+    }
+
+    public void clickAlert(){
+        Alert alert = driver.switchTo().alert();
+        alert.accept();
     }
 }

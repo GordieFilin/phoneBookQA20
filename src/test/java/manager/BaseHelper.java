@@ -3,10 +3,18 @@ package manager;
 
 import org.openqa.selenium.*;
 import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
+import static org.bouncycastle.crypto.tls.ContentType.alert;
+
 public class BaseHelper {
+    Logger logger = LoggerFactory.getLogger(BaseHelper.class);
+
 
     WebDriver driver;
 
@@ -48,13 +56,7 @@ public class BaseHelper {
     public boolean isTextEqual(By locator, String expectedResult) {
         String actualResult = getTextBase(locator);
         expectedResult = expectedResult.toUpperCase();
-        if (expectedResult.equals(actualResult)) {
-            return true;
-        } else {
-            System.out.println("expected result: " + expectedResult +
-                    "actual result: " + actualResult);
-        }
-        return false;
+        return isTextEqualGet2Strings(expectedResult, actualResult);
     }
         public void jsClickBase(String locator) {
             JavascriptExecutor js = (JavascriptExecutor) driver;
@@ -71,9 +73,25 @@ public class BaseHelper {
 
         }
 
+    public boolean isTextEqualGet2Strings(String expectedResult, String actualResult){
+        if (expectedResult.equals(actualResult)) {
+            return true;
+        } else {
+            System.out.println("expected result: " + expectedResult +
+                    "actual result: " + actualResult);
+        }
+        return false;
+    }
+
     public void pushEnter() {
         Actions action = new Actions(driver);
         action.sendKeys(Keys.RETURN).build().perform();
+    }
+
+    public String getTextAlert(){
+        WebDriverWait wait = new WebDriverWait(driver, 10);
+        Alert alert = wait.until(ExpectedConditions.alertIsPresent());
+        return alert.getText().toUpperCase().trim();
     }
 
     }

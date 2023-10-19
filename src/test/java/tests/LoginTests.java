@@ -4,6 +4,8 @@ import dto.UserDTO;
 import dto.UserDTOWith;
 import dto.UserDtoLombok;
 import org.testng.Assert;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
@@ -13,12 +15,18 @@ public class LoginTests extends BaseTests {
             .withPassword("123456Aa$");
     UserDTO userDTO = new UserDTO("testqa20@gmail.com", "123456Aa$");
 
-    @BeforeTest
+    @BeforeMethod
 
     public void preconditionsLogin() {
         app.navigateToMainPage();
         logoutIfLogin();
     }
+
+    @AfterMethod
+    public void postConditionsAlert(){
+        app.getUserHelper().clickAlert();
+    }
+
     @Test
     public void positiveLoginUserDto() {
         app.getUserHelper().fillLoginUserDto(userDTO);
@@ -50,7 +58,28 @@ public class LoginTests extends BaseTests {
                 .build();
 
         app.getUserHelper().loginUserDtoLombok(userDtoLombok);
-        Assert.assertTrue(app.getUserHelper().validateLoginIncorrect());
+        Assert.assertTrue(app.getUserHelper().validateMessageAlertWrongEmailPasswordCorrect());
     }
+    @Test
+    public void negativeLoginWithoutLetters(){
+        UserDtoLombok userDtoLombok = UserDtoLombok.builder()
+                .email("testqa20@gmail.com")
+                .password("12345678$")
+                .build();
+
+        app.getUserHelper().loginUserDtoLombok(userDtoLombok);
+        Assert.assertTrue(app.getUserHelper().validateMessageAlertWrongEmailPasswordCorrect());
+    }
+    @Test
+    public void negativeLoginWithoutSymbol(){
+        UserDtoLombok userDtoLombok = UserDtoLombok.builder()
+                .email("testqa20@gmail.com")
+                .password("123456Aaa")
+                .build();
+
+        app.getUserHelper().loginUserDtoLombok(userDtoLombok);
+        Assert.assertTrue(app.getUserHelper().validateMessageAlertWrongEmailPasswordCorrect());
+    }
+
 
 }

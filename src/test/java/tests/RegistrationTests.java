@@ -3,17 +3,24 @@ package tests;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import dto.UserDtoLombok;
 import org.testng.Assert;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 import utils.RandomUtils;
 
 public class RegistrationTests extends BaseTests{
 
-    @BeforeTest
+    @BeforeMethod
 
     public void preconditionsLogin() {
         app.navigateToMainPage();
         logoutIfLogin();
+    }
+
+    @AfterMethod
+    public void postConditionsAlert(){
+        app.getUserHelper().clickAlert();
     }
 
 
@@ -32,7 +39,7 @@ public class RegistrationTests extends BaseTests{
     }
 
     @Test
-    public void negativeRegistration(){
+    public void negativeRegistrationNoDigits(){
         String email = randomUtils.generateEmail(7);
 
         UserDtoLombok user = UserDtoLombok.builder()
@@ -41,7 +48,34 @@ public class RegistrationTests extends BaseTests{
                 .build();
 
         app.getUserHelper().fillRegistrationForm(user);
-        Assert.assertTrue(app.getUserHelper().validateRegIncorrect());
+        Assert.assertTrue(app.getUserHelper().validateMessageAlertWrongEmailPasswordCorrectReg());
+
+    }
+
+    @Test
+    public void negativeRegistrationNoLetters(){
+        String email = randomUtils.generateEmail(7);
+
+        UserDtoLombok user = UserDtoLombok.builder()
+                .email(email)
+                .password("12345678!")
+                .build();
+
+        app.getUserHelper().fillRegistrationForm(user);
+        Assert.assertTrue(app.getUserHelper().validateMessageAlertWrongEmailPasswordCorrectReg());
+
+    }
+    @Test
+    public void negativeRegistrationNoSymbol(){
+        String email = randomUtils.generateEmail(7);
+
+        UserDtoLombok user = UserDtoLombok.builder()
+                .email(email)
+                .password("1234aA789")
+                .build();
+
+        app.getUserHelper().fillRegistrationForm(user);
+        Assert.assertTrue(app.getUserHelper().validateMessageAlertWrongEmailPasswordCorrectReg());
 
     }
 }
